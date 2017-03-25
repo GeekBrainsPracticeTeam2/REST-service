@@ -55,16 +55,46 @@ public class DataBase {
         closeConnections();
     }
     public static void sites(){
-        json.Json.list.clear();
+        json.Json.listSites.clear();
         connectToBase();
         query = "select id,Name,Date from Sites order by Date desc";
         try{
             stmt = c.createStatement();
             rs = stmt.executeQuery(query);
             while(rs.next()){
-                json.Json.list.add(rs.getString("id")+","+rs.getString("Name")+","+rs.getString("Date"));
+                json.Json.listSites.add(rs.getString("id")+","+rs.getString("Name")+","+rs.getString("Date"));
             }
-            json.Json.objSites.put("sites", json.Json.list);
+            json.Json.objSites.put("sites", json.Json.listSites);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        closeConnections();
+    }
+        public static void persons(){
+        json.Json.listPersons.clear();
+        connectToBase();
+        query = "select id,Name from persons order by id desc";
+        try{
+            stmt = c.createStatement();
+            rs = stmt.executeQuery(query);
+            while(rs.next()){
+                json.Json.listPersons.add(rs.getString("id")+","+rs.getString("Name"));
+            }
+            json.Json.objPersons.put("persons", json.Json.listPersons);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        closeConnections();
+    }
+        public static void baseInsert(String name){
+        connectToBase();
+        query = "INSERT INTO Persons (Name) VALUES ('"+name+"');";
+        try{
+            stmt = c.createStatement();
+            stmt.executeUpdate(query);
+            
         }
         catch(SQLException e){
             e.printStackTrace();

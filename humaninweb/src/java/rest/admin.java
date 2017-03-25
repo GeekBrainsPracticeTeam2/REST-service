@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 public class admin extends HttpServlet {
      public static String sites;
      public static String lastdate;
+     public static String persons;
+     public static String personsadd;
     
 
     @Override
@@ -25,6 +27,7 @@ public class admin extends HttpServlet {
        
        sites = request.getParameter("sites");
        lastdate = request.getParameter("lastdate");
+       persons = request.getParameter("persons");
        
        if(lastdate!=null && lastdate.equals("get")){
            database.DataBase.lastDate();
@@ -36,6 +39,31 @@ public class admin extends HttpServlet {
           response.getWriter().write(json.Json.objSites.toString());
        }
        
+       if(persons != null && persons.equals("get")){
+           
+               database.DataBase.persons();
+               response.getWriter().write(json.Json.objPersons.toString());
+       
+        }
+       
     }
-
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException{
+       response.setCharacterEncoding("UTF8");
+       request.setCharacterEncoding("UTF8");
+       
+       personsadd = request.getParameter("personsadd");
+       
+       if(personsadd != null){
+           database.DataBase.baseInsert(personsadd);
+           response.getWriter().write(personsadd);
+           
+       }
+       
+       
+       
+    }
 }
+

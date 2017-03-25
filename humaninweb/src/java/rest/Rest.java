@@ -31,7 +31,7 @@ public class Rest extends HttpServlet {
        namehuman = request.getParameter("name");
        sitedest = request.getParameter("site");
        
-       response.getWriter().write(json.Json.objPerson.toString());
+       response.getWriter().write(json.Json.objPersons.toString());
         
        }
 
