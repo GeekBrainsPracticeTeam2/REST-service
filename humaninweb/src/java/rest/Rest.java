@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 @WebServlet(name = "Rest", urlPatterns = {"/Rest"})
+
 public class Rest extends HttpServlet {
     public static String namehuman;
     public static String sitedest;
@@ -30,7 +31,7 @@ public class Rest extends HttpServlet {
        namehuman = request.getParameter("name");
        sitedest = request.getParameter("site");
        
-      response.getWriter().write(json.Json.objPerson.toString());
+       response.getWriter().write(json.Json.objPerson.toString());
         
        }
 

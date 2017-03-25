@@ -4,8 +4,12 @@ package database;
 import java.sql.*;
 
 
+
 public class DataBase {
-    private static String url = "jdbc:mysql://"+"localhost"+":3306/"+"humaninweb"; 
+   
+    
+    
+    private static String url = "jdbc:mysql://localhost:3306/humaninweb"; 
     private static String user = "stat";
     private static String password = "stat";
     private static Connection c;
@@ -13,38 +17,60 @@ public class DataBase {
     private static ResultSet rs;
     private static String query;
     
-    public static void selectFromBase(String name, String site){
-        //запрос в базу для получения значения(нет данных откуда запрашивать)
-        query = "select * from Persons where name = '"+rest.Rest.namehuman+"'";
+     public static void connectToBase(){
         
         try{
+            Class.forName("com.mysql.jdbc.Driver");
             c = DriverManager.getConnection(url, user, password);
+        }
+        
+        catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        }
+    }
+  
+    public static void closeConnections(){
+         if(c != null){
+             try {
+                c.close();
+            }
+             catch (SQLException se) {  
+             se.printStackTrace();}
+        }
+    }
+     
+    public static void lastDate(){
+        connectToBase();
+        query = "select Date from Sites order by Date desc limit 1";
+        try{
             stmt = c.createStatement();
             rs = stmt.executeQuery(query);
             while(rs.next()){
-        //добавление в объект json 
-       json.Json.objPerson.put("name", rest.Rest.namehuman);
-       json.Json.objPerson.put("site", rest.Rest.sitedest);
-       json.Json.objPerson.put("freq", "Сколько раз имя встретилось на сайте");
+                json.Json.objLastDate.put("lastdate", rs.getString("Date"));
             }
         }
-        catch(SQLException sqlEx){
-            sqlEx.printStackTrace();
-            
+        catch(SQLException e){
+            e.printStackTrace();
         }
-        finally{
-                try {
-                c.close();
-            } catch (SQLException se) { 
-            }
-            try {
-                stmt.close();
-            } catch (SQLException se) {  
-            }
-            try {
-                rs.close();
-            } catch (SQLException se) {
-            }
-        }
+        closeConnections();
     }
+    public static void sites(){
+        json.Json.list.clear();
+        connectToBase();
+        query = "select id,Name,Date from Sites order by Date desc";
+        try{
+            stmt = c.createStatement();
+            rs = stmt.executeQuery(query);
+            while(rs.next()){
+                json.Json.list.add(rs.getString("id")+","+rs.getString("Name")+","+rs.getString("Date"));
+            }
+            json.Json.objSites.put("sites", json.Json.list);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        closeConnections();
+    }
+    
+    
 }
